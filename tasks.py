@@ -276,6 +276,8 @@ def install_service(c, verbose=False, prefix=DEFAULT_PREFIX):
         temp.write(service_data)
         temp.close()
         c.run(f"sudo cp {temp.name} {service_file}", hide=hide)
+        c.run(f"sudo systemctl start core-daemon.service", hide=hide)
+        c.run(f"sudo systemctl enable core-daemon.service", hide=hide)
     else:
         print(f"ERROR: systemd service path not found: {systemd_dir}")
 
