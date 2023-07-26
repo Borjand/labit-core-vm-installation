@@ -338,16 +338,32 @@ def build(
         c.run("make fpm", hide=hide)
 
 # Borjand: Included to create CORE GUI Launcher 
-@task
+@task(
+    help={
+        "verbose": "enable verbose",
+        "no-python": "avoid installing python system dependencies",
+    },
+)
+def launcher(
+    c,
+    verbose=False,
+    no_python=False,
+):
+    print("setting up to core launcher")
+    p = Progress(verbose)
+    hide = not verbose
+    with p.start("creating core launcher"):
+        create_launcher_gui(c, hide)
+
 def create_launcher_gui(c, verbose=False, prefix=HOME_PATH):
     """
-    Create core GUI launcher 
+    Create core GUI launcher
     """
     hide = not verbose
     bin_dir = Path(VENV_PATH).joinpath("bin")
     usr_apps_dir = Path(prefix).joinpath(".local/share/applications")
     app_file_path = usr_apps_dir.joinpath("core-gui.desktop")
-    icon_path = Path(HOME_PATH).joinpath("core/daemon/core/gui/data/icons/core-icon.png")
+    icon_path = Path().resolve().joinpath("daemon/core/gui/data/icons/core-icon.png")
     if icon_path.exists():
         service_data = inspect.cleandoc(f"""
             [Desktop Entry]
@@ -360,10 +376,15 @@ def create_launcher_gui(c, verbose=False, prefix=HOME_PATH):
         temp.write(service_data)
         temp.close()
         c.run(f"sudo cp {temp.name} {app_file_path}", hide=hide)
+        c.run(f"sudo chmod 644 {app_file_path}", hide=hide)
+        result = c.run(f"gsettings get org.gnome.shell favorite-apps | sed s/.$//", hide="both")
+        result = f'"{result.stdout}'
+        add_fav = f", 'core-gui.desktop'"
+        add_end = f']"'
+        result = result.replace('\n', ' ').replace('\r', '') + add_fav + add_end
+        c.run(f'gsettings set org.gnome.shell favorite-apps {result}', hide=hide)
     else:
         print(f"ERROR: icon not found for creating launcher: {icon_path}")
-
-
 
 
 @task(
