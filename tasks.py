@@ -27,6 +27,7 @@ SUDOP: str = "sudo -E env PATH=$PATH"
 VENV_PATH: str = "/opt/core/venv"
 VENV_PYTHON: str = f"{VENV_PATH}/bin/python"
 ACTIVATE_VENV: str = f". {VENV_PATH}/bin/activate"
+HOME_PATH: str = f"{Path.home()}"
 
 
 class Progress:
@@ -336,6 +337,34 @@ def build(
     with p.start(f"building rpm/deb packages"):
         c.run("make fpm", hide=hide)
 
+# Borjand: Included to create CORE GUI Launcher 
+@task
+def create_launcher_gui(c, verbose=False, prefix=HOME_PATH):
+    """
+    Create core GUI launcher 
+    """
+    hide = not verbose
+    bin_dir = Path(VENV_PATH).joinpath("bin")
+    usr_apps_dir = Path(prefix).joinpath(".local/share/applications")
+    app_file_path = usr_apps_dir.joinpath("core-gui.desktop")
+    icon_path = Path(HOME_PATH).joinpath("core/daemon/core/gui/data/icons/core-icon.png")
+    if icon_path.exists():
+        service_data = inspect.cleandoc(f"""
+            [Desktop Entry]
+            Name=Common Open Research Emulator
+            Exec={bin_dir}/core-gui
+            Type=Application
+            Icon={icon_path}
+            """)
+        temp = NamedTemporaryFile("w", delete=False)
+        temp.write(service_data)
+        temp.close()
+        c.run(f"sudo cp {temp.name} {app_file_path}", hide=hide)
+    else:
+        print(f"ERROR: icon not found for creating launcher: {icon_path}")
+
+
+
 
 @task(
     help={
@@ -387,7 +416,9 @@ def install(
     with p.start("installing scripts, examples, and configuration"):
         install_core_files(c, local, hide, prefix)
     with p.start("installing systemd service"):
-        install_service(c, hide, prefix)
+        install_service(c, hide, venv_path)
+    with p.start("creating core gui launcher"):
+        create_launcher_gui(c, hide)
     if ospf:
         with p.start("installing ospf mdr"):
             install_ospf_mdr(c, os_info, hide)
@@ -575,3 +606,5 @@ def test_emane(c):
     pytest = get_pytest(c)
     with c.cd(DAEMON_DIR):
         c.run(f"sudo {pytest} -v --lf -x tests/emane", pty=True)
+
+

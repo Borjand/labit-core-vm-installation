@@ -32,7 +32,7 @@ lxml = "4.9.1"
 netaddr = "0.7.19"
 protobuf = "4.21.9"
 pyproj = "3.3.1"
-pyyaml = "5.4"
+pyyaml = "5.3.1"
 Pillow = "9.2.0"
 Mako = "1.2.3"
 
