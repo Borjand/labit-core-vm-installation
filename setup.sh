@@ -89,7 +89,7 @@ echo "- Installation of sipp v3.6.0: Done!"
 # Installing jdk1.8.0_141
 echo "+ Installing JAVA (version 8u141) ..."
 cd $REPO_HOME
-sudo cp java_versions/jdk-8u141-linux-x64.tar.gz
+sudo wget -P /opt/ https://vm-images.netcom.it.uc3m.es/java_versions/jdk-8u141-linux-x64.tar.gz
 sudo tar -xvf /opt/jdk-8u141-linux-x64.tar.gz -C /opt/
 sudo rm /opt/jdk-8u141-linux-x64.tar.gz
 echo "" >> $HOME/.bashrc
