@@ -40,7 +40,8 @@ apt_packages=("vlc" "wireshark" "pimd" "kamailio" "tcpdump" "openssh-server" "tr
 
 for package in "${apt_packages[@]}"; do
     if [ "$package" = "wireshark" ]; then
-        echo "wireshark-common wireshark-common/install-setuid boolean false" | sudo debconf-set-selections
+        echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
+        sudo usermod -aG wireshark $USER
     fi
     sudo DEBIAN_FRONTEND=noninteractive apt install -y "$package"
     if [ $? -eq 0 ]; then
@@ -84,4 +85,9 @@ cd $REPO_HOME
 echo "- Installation of sipp v3.6.0: Done!"
 
 # Installing jdk1.8.0_141 
+
+
+
+echo "After all this installation, a reboot is mandatory!"
+sudo reboot
 
