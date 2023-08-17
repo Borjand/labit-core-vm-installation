@@ -14,7 +14,7 @@ about this can be found in the follwing link: (http://labit.lab.it.uc3m.es/en/ve
 
 ```shell
 git clone https://github.com/Borjand/labit-core-vm-installation.git
-cd core
+cd labit-core-vm-installation
 # install dependencies and run installation tasks
 ./setup.sh
 ```
