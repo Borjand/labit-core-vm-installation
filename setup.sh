@@ -3,6 +3,7 @@
 PYTHON="${PYTHON:=python3}"
 PYTHON_DEP="${PYTHON_DEP:=python3}"
 REPO_HOME="$(pwd)"
+LOCAL_USER="$(echo $USER)"
 
 # install pre-reqs using yum/apt
 if [ -z "${NO_SYSTEM}" ]; then
@@ -41,7 +42,8 @@ apt_packages=("vlc" "wireshark" "pimd" "kamailio" "tcpdump" "openssh-server" "tr
 for package in "${apt_packages[@]}"; do
     if [ "$package" = "wireshark" ]; then
         echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
-        sudo usermod -aG wireshark $USER
+        sudo usermod -a -G wireshark $LOCAL_USER
+        newgrp wireshark
     fi
     sudo DEBIAN_FRONTEND=noninteractive apt install -y "$package"
     if [ $? -eq 0 ]; then
@@ -82,13 +84,19 @@ cd /opt/sipp-3.6.0/
 ./configure
 make
 sudo cp sipp /usr/local/bin/
-cd $REPO_HOME
 echo "- Installation of sipp v3.6.0: Done!"
 
-# Installing jdk1.8.0_141 
+# Installing jdk1.8.0_141
+echo "+ Installing JAVA (version 8u141) ..."
+cd $REPO_HOME
+sudo cp java_versions/jdk-8u141-linux-x64.tar.gz
+sudo tar -xvf /opt/jdk-8u141-linux-x64.tar.gz -C /opt/
+sudo rm /opt/jdk-8u141-linux-x64.tar.gz
+echo "" >> $HOME/.bashrc
+echo "# Included during Labit VM software installation" >> $HOME/.bashrc
+echo 'export JAVA_PATH="/opt/jdk1.8.0_141"' >> $HOME/.bashr
+echo 'export PATH="$PATH:$JAVA_PATH/bin"' >> $HOME/.bashrc
 
 
-
-echo "After all this installation, a reboot is mandatory!"
-sudo reboot
+echo "Do not forget this: After all this installation, a reboot is mandatory!"
 
