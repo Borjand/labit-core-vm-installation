@@ -55,6 +55,7 @@ for package in "${apt_packages[@]}"; do
         echo "-- Error al instalar el paquete $package."
     fi
 done
+sudo apt autoremove -y
 echo "- Installation of apt packages: Done!"
 
 # install snap packages (usin classic option)
