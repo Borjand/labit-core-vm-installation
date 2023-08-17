@@ -42,8 +42,6 @@ apt_packages=("vlc" "wireshark" "pimd" "kamailio" "tcpdump" "openssh-server" "tr
 for package in "${apt_packages[@]}"; do
     if [ "$package" = "wireshark" ]; then
         echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
-        sudo usermod -a -G wireshark $LOCAL_USER
-        newgrp wireshark
     fi
     sudo DEBIAN_FRONTEND=noninteractive apt install -y "$package"
     if [ $? -eq 0 ]; then
@@ -52,6 +50,10 @@ for package in "${apt_packages[@]}"; do
         if [ "$package" = "pimd" ] || [ "$package" = "kamailio" ]; then
             sudo systemctl stop $package
             sudo systemctl disable $package
+        # Enabling non-root user to sniff traffic
+        elif [ "$package" = "wireshark" ]
+            sudo usermod -a -G wireshark $LOCAL_USER
+            newgrp wireshark
         fi
     else
         echo "-- Error al instalar el paquete $package."
@@ -89,12 +91,19 @@ echo "- Installation of sipp v3.6.0: Done!"
 # Installing jdk1.8.0_141
 echo "+ Installing JAVA (version 8u141) ..."
 cd $REPO_HOME
-sudo wget -P /opt/ https://vm-images.netcom.it.uc3m.es/java_versions/jdk-8u141-linux-x64.tar.gz
-sudo tar -xvf /opt/jdk-8u141-linux-x64.tar.gz -C /opt/
-sudo rm /opt/jdk-8u141-linux-x64.tar.gz
+uname -a | grep 'x86_64'
+if [ $? -eq 0 ]; then
+    sudo wget -P /opt/ https://vm-images.netcom.it.uc3m.es/java_versions/jdk-8u141-linux-x64.tar.gz
+    sudo tar -xvf /opt/jdk-8u141-linux-x64.tar.gz -C /opt/
+    sudo rm /opt/jdk-8u141-linux-x64.tar.gz
+else
+    sudo wget -P /opt/ https://vm-images.netcom.it.uc3m.es/java_versions/jdk-8u141-linux-arm64-vfp-hflt.tar.gz
+    sudo tar -xvf /opt/jdk-8u141-linux-arm64-vfp-hflt.tar.gz -C /opt/
+    sudo rm /opt/jdk-8u141-linux-arm64-vfp-hflt.tar.gz
+fi
 echo "" >> $HOME/.bashrc
 echo "# Included during Labit VM software installation" >> $HOME/.bashrc
-echo 'export JAVA_PATH="/opt/jdk1.8.0_141"' >> $HOME/.bashr
+echo 'export JAVA_PATH="/opt/jdk1.8.0_141"' >> $HOME/.bashrc
 echo 'export PATH="$PATH:$JAVA_PATH/bin"' >> $HOME/.bashrc
 
 
