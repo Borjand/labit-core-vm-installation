@@ -53,7 +53,6 @@ for package in "${apt_packages[@]}"; do
         # Enabling non-root user to sniff traffic
         elif [ "$package" = "wireshark" ]; then
             sudo usermod -a -G wireshark $LOCAL_USER
-            newgrp wireshark
         fi
     else
         echo "-- Error al instalar el paquete $package."
