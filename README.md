@@ -16,10 +16,12 @@ about this can be found in the follwing link: (http://labit.lab.it.uc3m.es/en/ve
 git clone https://github.com/Borjand/labit-core-vm-installation.git
 cd labit-core-vm-installation
 # install dependencies and run installation tasks
-./setup.sh
+./setup.sh 2>&1 | tee osm_install_log.txt
 ```
-> **NOTE**:
-> this development has been validated using **Linux Ubuntu Desktop 22.04.2 LTS** as Operating System, and **Python v3.10.6**. 
+> **NOTES:** 
+> The installation process may take a long time, so be patient. Consider restarting the computer once the installation is complete.
+
+> :warning: This development has been validated using **Linux Ubuntu Desktop 22.04.3 LTS** as Operating System, and **Python v3.10.12**. 
 
 ## Documentation & Support
 We are leveraging a Wiki where you can find more documentation concerning the ulization of the Labit VM
