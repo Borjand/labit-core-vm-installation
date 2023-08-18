@@ -1,9 +1,10 @@
 # Labit Virtual Machine Installation (CORE)
-This repository contains the necessary elements to allow the automated installation of software tools involved in the creation of the Labit virtual machine (VM). Thus, enabling the necessary resources to undertake the laboratories of Audiovisual Services, Computer Networks and Design and Operation of Communication Networks, subject from the Department of Telematics Engineering of the Universidad Carlos III de Madrid.
+This repository contains the necessary elements to allow the automated installation of software tools involved in the creation of the Labit virtual machine (VM). Thus, enabling the necessary resources to undertake the laboratories of Audiovisual Services, Computer Networks and Design and Operation of Communication Networks, subjects from the Department of Telematics Engineering of the Universidad Carlos III de Madrid.
 
 ## Requirements
 * An operational VM with Ubuntu Desktop 22.04 (jammy) as Operating System. The Ubuntu image (depending on the host chipset, Intel, ARM, or M1/M2) can be found [here](https://cdimage.ubuntu.com/jammy/daily-live/current/)
-* Python 3.9+ 
+* Python 3.9+
+* Git
 
 ## Quick Start (Install)
 
