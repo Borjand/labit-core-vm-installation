@@ -16,7 +16,7 @@ about this can be found in the follwing link: (http://labit.lab.it.uc3m.es/en/ve
 git clone https://github.com/Borjand/labit-core-vm-installation.git
 cd labit-core-vm-installation
 # install dependencies and run installation tasks
-./setup.sh 2>&1 | tee osm_install_log.txt
+./setup.sh 2>&1 | tee installation_log.txt
 ```
 > **NOTES:** 
 > The installation process may take a long time, so be patient. Consider restarting the computer once the installation is complete.
