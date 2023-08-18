@@ -51,7 +51,7 @@ for package in "${apt_packages[@]}"; do
             sudo systemctl stop $package
             sudo systemctl disable $package
         # Enabling non-root user to sniff traffic
-        elif [ "$package" = "wireshark" ]
+        elif [ "$package" = "wireshark" ]; then
             sudo usermod -a -G wireshark $LOCAL_USER
             newgrp wireshark
         fi
